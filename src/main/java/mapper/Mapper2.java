@@ -33,7 +33,7 @@ public class Mapper2 extends Mapper<LongWritable, Text, Text, Text> {
             // create key for each record according to trade time and time window(s)
             String timeWindowKey = createTimeKey(tradeTime);
             context.write(new Text(timeWindowKey),
-                    new Text(ApplSeqNum+" "+BidApplSeqNum+" "+OfferApplSeqNum+" "+Price+" "+TradeQty+" 2"));
+                    new Text(ApplSeqNum+" "+BidApplSeqNum+" "+OfferApplSeqNum+" "+Price+" "+TradeQty+" 1"));
         }
     }
     private String createTimeKey(String tradeTime){

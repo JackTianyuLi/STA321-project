@@ -23,7 +23,7 @@ public class Mapper1 extends Mapper<LongWritable, Text, Text, Text> {
         if (SecurityID.equals(filter)){  // filter out order data
             String ApplSeqNum = fields[7];
             String TransactTime = fields[12];
-            context.write(new Text(ApplSeqNum), new Text(TransactTime+" 1"));
+            context.write(new Text(ApplSeqNum), new Text(TransactTime+" 0"));
         }
     }
 }
