@@ -11,12 +11,11 @@ import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import reducer.StockReducer;
-
 import java.io.IOException;
-import java.net.URISyntaxException;
+
 
 public class StockDriver {
-    public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException, URISyntaxException {
+    public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
         // initialization and configuration
         Configuration conf = new Configuration();
         conf.set("mapreduce.output.textoutputformat.separator", " ");

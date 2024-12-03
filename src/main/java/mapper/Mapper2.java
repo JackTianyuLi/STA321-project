@@ -3,7 +3,6 @@ package mapper;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
-
 import java.io.IOException;
 
 public class Mapper2 extends Mapper<LongWritable, Text, Text, Text> {
@@ -11,7 +10,7 @@ public class Mapper2 extends Mapper<LongWritable, Text, Text, Text> {
     private String filter;
 
     @Override
-    protected void setup(Context context) throws IOException, InterruptedException {
+    protected void setup(Context context) {
         // read time window and filter from configuration
         TimeWindow = Integer.parseInt(context.getConfiguration().get("timeWindow.param"));
         filter = context.getConfiguration().get("filter.param");

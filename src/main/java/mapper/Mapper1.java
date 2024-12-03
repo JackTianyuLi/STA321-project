@@ -3,14 +3,13 @@ package mapper;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
-
 import java.io.IOException;
 
 public class Mapper1 extends Mapper<LongWritable, Text, Text, Text> {
     private String filter;
 
     @Override
-    protected void setup(Context context) throws IOException, InterruptedException {
+    protected void setup(Context context) {
         // read filter condition from configuration
         filter = context.getConfiguration().get("filter.param");
     }
