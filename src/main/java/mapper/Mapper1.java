@@ -8,9 +8,10 @@ import java.io.IOException;
 
 public class Mapper1 extends Mapper<LongWritable, Text, Text, Text> {
     private String filter;
-//处理order
+
+    // filter out corresponding stock data
     @Override
-    public void setup(Context context) {
+    public void setup(Context context) { // get conf. param
         filter = StockDriver.conf.get("filter.param");
     }
 
@@ -20,12 +21,10 @@ public class Mapper1 extends Mapper<LongWritable, Text, Text, Text> {
         String[] fields = value.toString().trim().split("\\s+|\\t+");
         String SecurityID = fields[8];  // StockID
         if (SecurityID.equals(filter)){  // filter out order data
-            String ApplSeqNum = fields[7];
+            String ApplSeqNum = fields[7]; // order PK
             String TransactTime = fields[12];
-            Long transactTime = Long.parseLong(TransactTime);//委托时间
-            StockDriver.orderMap.put(ApplSeqNum, transactTime);//(委托编号，委托时间)的映射关系
-//
+            Long transactTime = Long.parseLong(TransactTime);//transaction time
+            StockDriver.orderMap.put(ApplSeqNum, transactTime);//map from order PK to transaction time
         }
     }
 }
-
