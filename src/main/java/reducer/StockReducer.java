@@ -140,16 +140,28 @@ public class StockReducer extends Reducer<Text, Text, Text, Text> {
         // output: time window, main inflow, extra-large purchased order quantity, extra-large purchased order amount,
         // large purchased order quantity, large purchased order amount, medium purchased order quantity, medium purchased order amount,
         // small purchased order quantity, small purchased order amount
-        context.write(new Text(key.toString()), new Text("\n主力流入: " + total_in + " \n超大买单量: " + super_in + "," + "\n超大买单额: " + super_in_price
-                + "\n大买单量: " + large_in + "," + "\n大买单额: " + large_in_price + "\n 中买单量: " + medium_in + ","
-                + "\n中买单额: " + medium_in + "," + "\n小买单量: " + small_in + "," + "\n小买单额:" + small_in_price));
+//        context.write(new Text(key.toString()), new Text("\n主力流入: " + total_in + " \n超大买单量: " + super_in + "," + "\n超大买单额: " + super_in_price
+//                + "\n大买单量: " + large_in + "," + "\n大买单额: " + large_in_price + "\n 中买单量: " + medium_in + ","
+//                + "\n中买单额: " + medium_in + "," + "\n小买单量: " + small_in + "," + "\n小买单额:" + small_in_price));
 
         // output: time window, main net inflow, main outflow, extra-large sold order quantity, extra-large sold order amount,
         // large sold order quantity, large sold order amount, medium sold order quantity, medium sold order amount,
         // small sold order quantity, small sold order amount
-        context.write(new Text(key.toString()), new Text("\n主力净流入：" + (total_in - total_out) + "\n主力流出: " + total_out + "\n超大卖单量: " + super_out + "," + "\n超大卖单额: " +
-                super_out_price + "," + "\n大卖单量: " + large_out + "," + "\n大卖单额: " + large_out_price + "," + "\n中卖单量: " + medium_out + ","
-                + "\n中卖单额: " + medium_out_price + "," + "\n小卖单量: " + small_out + "," + "\n小卖单额: " + small_out_price));
+//        context.write(new Text(key.toString()), new Text("\n主力净流入：" + (total_in - total_out) + "\n主力流出: " + total_out + "\n超大卖单量: " + super_out + "," + "\n超大卖单额: " +
+//                super_out_price + "," + "\n大卖单量: " + large_out + "," + "\n大卖单额: " + large_out_price + "," + "\n中卖单量: " + medium_out + ","
+//                + "\n中卖单额: " + medium_out_price + "," + "\n小卖单量: " + small_out + "," + "\n小卖单额: " + small_out_price));
+
+        // output: time window, main net inflow, main inflow, main outflow, extra-large purchased order quantity,
+        // extra-large purchased order amount, extra-large sold order quantity, extra-large sold order amount,
+        // large purchased order quantity, large purchased order amount, large sold order quantity, large sold order amount,
+        // medium purchased order quantity, medium purchased order amount, medium sold order quantity, medium sold order amount,
+        // small purchased order quantity, small purchased order amount, small sold order quantity, small sold order amount
+
+        context.write(new Text(key.toString()), new Text((total_in - total_out) + "," + total_in + "," + total_out + ","
+                + super_in + "," + super_in_price + "," + super_out + "," +  super_out_price + ","
+                + large_in + "," + large_in_price + "," + large_out + "," +  large_out_price + ","
+                + medium_in + "," + medium_in_price + "," + medium_out + "," + medium_out_price + ","
+                + small_in + "," + small_in_price + "," + small_out + ","  + small_out_price));
     }
 
     private String classifyOrder(int tradeQty, float price) {// classify orders
