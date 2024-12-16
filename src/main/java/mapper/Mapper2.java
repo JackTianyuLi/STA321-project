@@ -53,9 +53,15 @@ public class Mapper2 extends Mapper<LongWritable, Text, Text, Text> {
         int minute = Integer.parseInt(tradeTime.substring(10, 12));
 
         // set base time as 9:30
-        int baseHour = 9;
-        int baseMinute = 30;
-
+        int baseHour;
+        int baseMinute;
+        if(hour <=12){
+             baseHour = 9;
+             baseMinute = 30;
+        } else{
+            baseHour = 13;
+            baseMinute = 0;
+        }
         // convert input time to # of minutes
         int inputTotalMinutes = (hour * 60 + minute);
 
