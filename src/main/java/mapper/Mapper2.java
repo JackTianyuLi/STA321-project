@@ -34,8 +34,10 @@ public class Mapper2 extends Mapper<LongWritable, Text, Text, Text> {
                     String tradeTime = fields[15];
                     // create key for each record according to trade time and time window(sec)
                     String timeWindowKey = createTimeKey(tradeTime);
-                    context.write(new Text(timeWindowKey),//set key according to time window
-                            new Text(ApplSeqNum + " " + BidApplSeqNum + " " + OfferApplSeqNum + " " + Price + " " + TradeQty));
+                    if (timeWindowKey != null) {
+                        context.write(new Text(timeWindowKey),//set key according to time window
+                                new Text(ApplSeqNum + " " + BidApplSeqNum + " " + OfferApplSeqNum + " " + Price + " " + TradeQty));
+                    }
                     // return all trade data in the given period of time
                 }
         } catch (IOException e) {
@@ -55,6 +57,9 @@ public class Mapper2 extends Mapper<LongWritable, Text, Text, Text> {
         // set base time as 9:30
         int baseHour;
         int baseMinute;
+        if(hour == 15||(hour == 9 && minute<30)){
+            return null;
+        }
         if(hour <=12){
              baseHour = 9;
              baseMinute = 30;

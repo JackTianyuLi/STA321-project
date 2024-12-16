@@ -1,6 +1,5 @@
 package reducer;
 
-import driver.StockDriver;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import java.io.IOException;
@@ -72,7 +71,6 @@ public class StockReducer extends Reducer<Text, Text, Text, Text> {
                         sellMap.put(offerApplSeqNum, data);  // store in a HashMap
                     }
                 }
-
         }
 
         // sum up the data
@@ -161,11 +159,16 @@ public class StockReducer extends Reducer<Text, Text, Text, Text> {
         // large purchased order quantity, large purchased order amount, large sold order quantity, large sold order amount,
         // medium purchased order quantity, medium purchased order amount, medium sold order quantity, medium sold order amount,
         // small purchased order quantity, small purchased order amount, small sold order quantity, small sold order amount
+
 // 创建一个 DecimalFormat 实例
 
 
 
 // 在输出结果时格式化每个数值
+
+        // create a DecimalFormat instance
+        // convert to format when output
+
         context.write(new Text(key.toString()), new Text(
                 formatValue(total_in - total_out) + "," +
                         formatValue(total_in) + "," +
@@ -189,16 +192,21 @@ public class StockReducer extends Reducer<Text, Text, Text, Text> {
         ));
 
 
+
+
     }
 
     public String formatValue(double value) {
         DecimalFormat df = new DecimalFormat("#.00");
-        // 判断是否为整数或为零
+        // integer or 0
         if (value == Math.floor(value) && !Double.isInfinite(value)) {
-            return String.valueOf((int)value); // 如果是整数，直接转为整数格式
+            return String.valueOf((int)value); // integer
         }
-        return df.format(value); // 否则格式化为小数格式
+        return df.format(value); // float
+
     }
+
+
     private String classifyOrder(int tradeQty, float price) {// classify orders
         if (tradeQty >= 200000 || price >= 1000000 || ((double) tradeQty * 100 / 17170245800L) >= 0.3) {
             return "extra-large"; // extra-large order
