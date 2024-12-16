@@ -57,7 +57,11 @@ public class Mapper2 extends Mapper<LongWritable, Text, Text, Text> {
         // set base time as 9:30
         int baseHour;
         int baseMinute;
-        if(hour == 15||(hour == 9 && minute<30)){
+        if(hour == 15){
+            hour = 14;
+            minute = 59;
+        }
+        if((hour == 9 && minute<30)){
             return null;
         }
         if(hour <=12){
