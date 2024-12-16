@@ -1,9 +1,9 @@
 package reducer;
 
-import driver.StockDriver;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 
 public class StockReducer extends Reducer<Text, Text, Text, Text> {
@@ -22,12 +22,13 @@ public class StockReducer extends Reducer<Text, Text, Text, Text> {
             String offerApplSeqNum = fields[2]; // sell order ID
             float price = Float.parseFloat(fields[3]); // price
             int tradeQty = Integer.parseInt(fields[4]); // quantity
-            Long bidTransactTime = StockDriver.orderMap.get(bidApplSeqNum);//purchase time
-            Long offerTransactTime = StockDriver.orderMap.get(offerApplSeqNum);//sell time
+//            double bidTransactTime = StockDriver.orderMap.get(bidApplSeqNum);//purchase time
+//            double offerTransactTime = StockDriver.orderMap.get(offerApplSeqNum);//sell time
+            double bidTransactTime = Double.parseDouble(bidApplSeqNum) ;//purchase time
+            double offerTransactTime = Double.parseDouble(offerApplSeqNum) ;//sell time
 
-            if (bidTransactTime != null && offerTransactTime != null) {
                 String direction = (bidTransactTime > offerTransactTime) ? "BUY" : "SELL";// set trade direction
-
+//       context.write(new Text(applSeqNum), new Text(direction + " " + bidApplSeqNum+ " " + bidTransactTime + " " + offerApplSeqNum+ " " + offerTransactTime + " " + price + " " + tradeQty));
                 // merge orders with same IDs
                 if (direction.equals("BUY")) { // proactive purchased order
                     // merge order with a same purchase order ID
@@ -69,28 +70,27 @@ public class StockReducer extends Reducer<Text, Text, Text, Text> {
                         sellMap.put(offerApplSeqNum, data);  // store in a HashMap
                     }
                 }
-            }
         }
 
         // sum up the data
-        long total_in = 0; // main inflow
-        long total_out = 0; // main outflow
-        long super_in = 0; // super-large purchased quantity
-        long super_in_price = 0; // super-large purchased amount
-        long super_out = 0; // super-large sold quantity
-        long super_out_price = 0; // super-large sold amount
-        long large_in = 0; // large purchased quantity
-        long large_in_price = 0; // large purchased amount
-        long large_out = 0; // large sold quantity
-        long large_out_price = 0; // large sold amount
-        long medium_in = 0; // medium purchased quantity
-        long medium_in_price = 0; // medium purchased amount
-        long medium_out = 0; // medium sold quantity
-        long medium_out_price = 0; // medium sold amount
-        long small_in = 0; // small purchased quantity
-        long small_in_price = 0; // small purchased amount
-        long small_out = 0; // small sold quantity
-        long small_out_price = 0; // small sold amount
+        double total_in = 0; // main inflow
+        double total_out = 0; // main outflow
+        double super_in = 0; // super-large purchased quantity
+        double super_in_price = 0; // super-large purchased amount
+        double super_out = 0; // super-large sold quantity
+        double super_out_price = 0; // super-large sold amount
+        double large_in = 0; // large purchased quantity
+        double large_in_price = 0; // large purchased amount
+        double large_out = 0; // large sold quantity
+        double large_out_price = 0; // large sold amount
+        double medium_in = 0; // medium purchased quantity
+        double medium_in_price = 0; // medium purchased amount
+        double medium_out = 0; // medium sold quantity
+        double medium_out_price = 0; // medium sold amount
+        double small_in = 0; // small purchased quantity
+        double small_in_price = 0; // small purchased amount
+        double small_out = 0; // small sold quantity
+        double small_out_price = 0; // small sold amount
 
         //calculation after merging data
         for (String bidKey : buyMap.keySet()) { // iterate over every proactively purchased order
@@ -112,6 +112,7 @@ public class StockReducer extends Reducer<Text, Text, Text, Text> {
                 small_in += totalTradeQty;
                 small_in_price += totalPrice;
             }
+//            context.write(new Text(key.toString()), new Text(bidKey + " " + totalTradeQty + " " + totalPrice + " " + orderType));
         }
         total_in = super_in_price + large_in_price;
 
@@ -134,6 +135,7 @@ public class StockReducer extends Reducer<Text, Text, Text, Text> {
                 small_out += totalTradeQty;
                 small_out_price += totalPrice;
             }
+//            context.write(new Text(key.toString()), new Text(sellKey + " " + totalTradeQty + " " + totalPrice + " " + orderType));
         }
         total_out = super_out_price + large_out_price;
 
@@ -142,12 +144,38 @@ public class StockReducer extends Reducer<Text, Text, Text, Text> {
         // large purchased order quantity, large purchased order amount, large sold order quantity, large sold order amount,
         // medium purchased order quantity, medium purchased order amount, medium sold order quantity, medium sold order amount,
         // small purchased order quantity, small purchased order amount, small sold order quantity, small sold order amount
+        // create a DecimalFormat instance
+        // convert to format when output
+        context.write(new Text(key.toString()), new Text(
+                formatValue(total_in - total_out) + "," +
+                        formatValue(total_in) + "," +
+                        formatValue(total_out) + "," +
+                        formatValue(super_in) + "," +
+                        formatValue(super_in_price) + "," +
+                        formatValue(super_out) + "," +
+                        formatValue(super_out_price) + "," +
+                        formatValue(large_in) + "," +
+                        formatValue(large_in_price) + "," +
+                        formatValue(large_out) + "," +
+                        formatValue(large_out_price) + "," +
+                        formatValue(medium_in) + "," +
+                        formatValue(medium_in_price) + "," +
+                        formatValue(medium_out) + "," +
+                        formatValue(medium_out_price) + "," +
+                        formatValue(small_in) + "," +
+                        formatValue(small_in_price) + "," +
+                        formatValue(small_out) + "," +
+                        formatValue(small_out_price)
+        ));
+    }
 
-        context.write(new Text(key.toString()), new Text((total_in - total_out) + "," + total_in + "," + total_out + ","
-                + super_in + "," + super_in_price + "," + super_out + "," +  super_out_price + ","
-                + large_in + "," + large_in_price + "," + large_out + "," +  large_out_price + ","
-                + medium_in + "," + medium_in_price + "," + medium_out + "," + medium_out_price + ","
-                + small_in + "," + small_in_price + "," + small_out + ","  + small_out_price));
+    public String formatValue(double value) {
+        DecimalFormat df = new DecimalFormat("#.00");
+        // integer or 0
+        if (value == Math.floor(value) && !Double.isInfinite(value)) {
+            return String.valueOf((int)value); // integer
+        }
+        return df.format(value); // float
     }
 
     private String classifyOrder(int tradeQty, float price) {// classify orders
