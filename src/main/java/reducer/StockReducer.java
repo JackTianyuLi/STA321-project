@@ -17,19 +17,15 @@ public class StockReducer extends Reducer<Text, Text, Text, Text> {
         for (Text value : values) {
             String s = value.toString();
             String[] fields = s.split(" ");
-            String applSeqNum = fields[0]; // trade ID
             String bidApplSeqNum = fields[1]; // purchase order ID
             String offerApplSeqNum = fields[2]; // sell order ID
             float price = Float.parseFloat(fields[3]); // price
             int tradeQty = Integer.parseInt(fields[4]); // quantity
-//            double bidTransactTime = StockDriver.orderMap.get(bidApplSeqNum);//purchase time
-//            double offerTransactTime = StockDriver.orderMap.get(offerApplSeqNum);//sell time
             double bidTransactTime = Double.parseDouble(bidApplSeqNum) ;//purchase time
             double offerTransactTime = Double.parseDouble(offerApplSeqNum) ;//sell time
 
                 String direction = (bidTransactTime > offerTransactTime) ? "BUY" : "SELL";// set trade direction
-//       context.write(new Text(applSeqNum), new Text(direction + " " + bidApplSeqNum+ " " + bidTransactTime + " " + offerApplSeqNum+ " " + offerTransactTime + " " + price + " " + tradeQty));
-                // merge orders with same IDs
+               // merge orders with same IDs
                 if (direction.equals("BUY")) { // proactive purchased order
                     // merge order with a same purchase order ID
                     if (buyMap.containsKey(bidApplSeqNum)) {
@@ -113,7 +109,6 @@ public class StockReducer extends Reducer<Text, Text, Text, Text> {
                 small_in += totalTradeQty;
                 small_in_price += totalPrice;
             }
-//            context.write(new Text(key.toString()), new Text(bidKey + " " + totalTradeQty + " " + totalPrice + " " + orderType));
         }
         total_in = super_in_price + large_in_price;
 
@@ -136,24 +131,15 @@ public class StockReducer extends Reducer<Text, Text, Text, Text> {
                 small_out += totalTradeQty;
                 small_out_price += totalPrice;
             }
-//            context.write(new Text(key.toString()), new Text(sellKey + " " + totalTradeQty + " " + totalPrice + " " + orderType));
         }
         total_out = super_out_price + large_out_price;
 
         // output: time window, main inflow, extra-large purchased order quantity, extra-large purchased order amount,
         // large purchased order quantity, large purchased order amount, medium purchased order quantity, medium purchased order amount,
         // small purchased order quantity, small purchased order amount
-//        context.write(new Text(key.toString()), new Text("\n主力流入: " + total_in + " \n超大买单量: " + super_in + "," + "\n超大买单额: " + super_in_price
-//                + "\n大买单量: " + large_in + "," + "\n大买单额: " + large_in_price + "\n 中买单量: " + medium_in + ","
-//                + "\n中买单额: " + medium_in + "," + "\n小买单量: " + small_in + "," + "\n小买单额:" + small_in_price));
-
         // output: time window, main net inflow, main outflow, extra-large sold order quantity, extra-large sold order amount,
         // large sold order quantity, large sold order amount, medium sold order quantity, medium sold order amount,
         // small sold order quantity, small sold order amount
-//        context.write(new Text(key.toString()), new Text("\n主力净流入：" + (total_in - total_out) + "\n主力流出: " + total_out + "\n超大卖单量: " + super_out + "," + "\n超大卖单额: " +
-//                super_out_price + "," + "\n大卖单量: " + large_out + "," + "\n大卖单额: " + large_out_price + "," + "\n中卖单量: " + medium_out + ","
-//                + "\n中卖单额: " + medium_out_price + "," + "\n小卖单量: " + small_out + "," + "\n小卖单额: " + small_out_price));
-
         // output: time window, main net inflow, main inflow, main outflow, extra-large purchased order quantity,
         // extra-large purchased order amount, extra-large sold order quantity, extra-large sold order amount,
         // large purchased order quantity, large purchased order amount, large sold order quantity, large sold order amount,
@@ -169,7 +155,7 @@ public class StockReducer extends Reducer<Text, Text, Text, Text> {
         // create a DecimalFormat instance
         // convert to format when output
 
-        context.write(new Text(key.toString()), new Text(
+        context.write(null, new Text(
                 formatValue(total_in - total_out) + "," +
                         formatValue(total_in) + "," +
                         formatValue(total_out) + "," +
@@ -188,7 +174,8 @@ public class StockReducer extends Reducer<Text, Text, Text, Text> {
                         formatValue(small_in) + "," +
                         formatValue(small_in_price) + "," +
                         formatValue(small_out) + "," +
-                        formatValue(small_out_price)
+                        formatValue(small_out_price)+","+
+                        key.toString()
         ));
 
 

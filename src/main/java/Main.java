@@ -1,8 +1,16 @@
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
 public class Main {
+   static final int TimeWindow = 60; // in minutes
+
     public static void main(String[] args) {
-        System.out.println(createTimeKey("201901021300200000",300));
+       String tradeTime = "2019010211459870";
+       String ans=createTimeKey(tradeTime);
+       System.out.println(ans);
     }
-    private static String createTimeKey(String tradeTime, int TimeWindow) {
+    private static String createTimeKey(String tradeTime) { // convert input time to the start of a time window
         // trade time format: yyyyMMddHHmmSSsss
         // extract y, M, d, H, m, S, s
         int year = Integer.parseInt(tradeTime.substring(0, 4));
@@ -11,72 +19,50 @@ public class Main {
         int hour = Integer.parseInt(tradeTime.substring(8, 10));
         int minute = Integer.parseInt(tradeTime.substring(10, 12));
 
-        // 基准时间设置为 9:30
-        int baseHour = 9;
-        int baseMinute = 30;
-
-        // 将输入的时间转换为绝对分钟数
-        int inputTotalMinutes = (hour * 60 + minute);
-
-        // 将 9:30 转换为绝对分钟数
-        int baseTotalMinutes = (baseHour * 60 + baseMinute);
-
-        // 计算时间间隔
-        int timeSlotIndex;
-        if (inputTotalMinutes < baseTotalMinutes) {
-            // 输入时间在 9:30 之前，时间间隔的计算方式
-            timeSlotIndex = (inputTotalMinutes - baseTotalMinutes - (TimeWindow / 60)) / (TimeWindow / 60);; // -10 表示时间需要向前推进到所在的时间段
-        } else {
-            timeSlotIndex = (inputTotalMinutes - baseTotalMinutes) / (TimeWindow / 60);; // 正常情况下
+        // set base time as 9:30
+        int baseHour;
+        int baseMinute;
+        if (hour == 15) {
+            hour = 14;
+            minute = 59;
+        }
+        if (hour < 9 || (hour == 9 && minute < 30)) {
+            return null; // 早于9:30返回null
         }
 
-        // 计算新的分钟数，返回的时间点为下一个时间段的起始时间
-        int newBaseMinute = baseMinute + timeSlotIndex * (TimeWindow / 60);;
+        if (hour <= 12) {
+            baseHour = 9;
+            baseMinute = 30;
+        } else {
+            baseHour = 13;
+            baseMinute = 0;
+        }
 
-        // 如果 newBaseMinute 超过 59 分钟，需要进位到小时
-        int finalHour = baseHour + newBaseMinute / 60;
-        newBaseMinute = newBaseMinute % 60;
+        // convert input time to total minutes
+        int inputTotalMinutes = (hour * 60 + minute);
+        int baseTotalMinutes = (baseHour * 60 + baseMinute);
 
-        // 格式化输出到分钟
-        return String.format("%d年%02d月%02d日%02d点%02d分", year, month, day, finalHour, newBaseMinute);
+        // calculate time slot index
+        int timeSlotIndex = (inputTotalMinutes - baseTotalMinutes) / (TimeWindow / 60);
+
+        // calculate current and next time slots
+        int startMinutes = baseTotalMinutes + timeSlotIndex * (TimeWindow / 60);
+        int endMinutes = startMinutes + (TimeWindow / 60);
+
+        // converting back to hours and minutes
+        int finalStartHour = startMinutes / 60;
+        int finalStartMinute = startMinutes % 60;
+
+        int finalEndHour = endMinutes / 60;
+        int finalEndMinute = endMinutes % 60;
+
+        if(finalEndHour >= 15){
+            finalEndHour = 15;
+            finalEndMinute = 0;
+        }
+        // output in the desired format
+        return String.format("%d%02d%02d%02d%02d00000 to %d%02d%02d%02d%02d00000",
+                year, month, day, finalStartHour, finalStartMinute,
+                year, month, day, finalEndHour, finalEndMinute);
     }
-//    static String createTimeKey(String tradeTime) {
-//        // trade time format: yyyyMMddHHmmSSsss
-//        // extract y, M, d, H, m, S, s
-//        int year = Integer.parseInt(tradeTime.substring(0, 4));
-//        int month = Integer.parseInt(tradeTime.substring(4, 6));
-//        int day = Integer.parseInt(tradeTime.substring(6, 8));
-//        int hour = Integer.parseInt(tradeTime.substring(8, 10));
-//        int minute = Integer.parseInt(tradeTime.substring(10, 12));
-//
-//        // 基准时间设置为 9:30
-//        int baseHour = 9;
-//        int baseMinute = 30;
-//
-//        // 将输入的时间转换为绝对分钟数
-//        int inputTotalMinutes = (hour * 60 + minute);
-//
-//        // 将 9:30 转换为绝对分钟数
-//        int baseTotalMinutes = (baseHour * 60 + baseMinute);
-//        int timeSlotIndex = 0;
-//        // 计算时间间隔
-//        if (inputTotalMinutes < baseTotalMinutes) {
-//            // 输入时间在 9:30 之前，时间间隔为 0
-//            timeSlotIndex = (inputTotalMinutes - baseTotalMinutes-10) / (10);
-//        } else {
-//            timeSlotIndex = (inputTotalMinutes - baseTotalMinutes) / (10);
-//        }
-//          // 每个时间段为 10 分钟
-////         System.out.println("timeSlotIndex: " + timeSlotIndex);
-//        // 计算新的分钟数，返回的时间点为下一个时间段的起始时间
-//        int newBaseMinute = baseMinute + timeSlotIndex * 10;
-//
-//        // 如果 newBaseMinute 超过 59 分钟，需要进位到小时
-//        int finalHour = baseHour + newBaseMinute / 60;
-//        newBaseMinute = newBaseMinute % 60;
-//
-//        // 格式化输出到分钟
-//        return String.format("%d年%02d月%02d日%02d点%02d分", year, month, day, finalHour, newBaseMinute);
-//    }
-
 }
