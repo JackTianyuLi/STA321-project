@@ -89,25 +89,25 @@ function visualizeData(data) {
     const ctxSmallPrice = document.getElementById('smallPriceChart').getContext('2d');
 
     // 主力流入
-    createChart(ctxMainInflow, '主力流入', data.timeLabels, data.mainInflow, data.mainOutflow, data.mainNetInflow);
+    createChart(ctxMainInflow, 'Main flow', data.timeLabels, data.mainInflow, data.mainOutflow, data.mainNetInflow);
 
     // 超大订单
-    createDualChart(ctxExtraLargeVolume, ctxExtraLargePrice, '超大', data.timeLabels,
+    createDualChart(ctxExtraLargeVolume, ctxExtraLargePrice, 'Extra-large', data.timeLabels,
         data.extraLargeBuyVolume, data.extraLargeSellVolume,
         data.extraLargeBuyPrice, data.extraLargeSellPrice);
 
     // 大订单
-    createDualChart(ctxLargeVolume, ctxLargePrice, '大', data.timeLabels,
+    createDualChart(ctxLargeVolume, ctxLargePrice, 'Large', data.timeLabels,
         data.largeBuyVolume, data.largeSellVolume,
         data.largeBuyPrice, data.largeSellPrice);
 
     // 中订单
-    createDualChart(ctxMediumVolume, ctxMediumPrice, '中', data.timeLabels,
+    createDualChart(ctxMediumVolume, ctxMediumPrice, 'Medium', data.timeLabels,
         data.mediumBuyVolume, data.mediumSellVolume,
         data.mediumBuyPrice, data.mediumSellPrice);
 
     // 小订单
-    createDualChart(ctxSmallVolume, ctxSmallPrice, '小', data.timeLabels,
+    createDualChart(ctxSmallVolume, ctxSmallPrice, 'Small', data.timeLabels,
         data.smallBuyVolume, data.smallSellVolume,
         data.smallBuyPrice, data.smallSellPrice);
 }
@@ -119,19 +119,19 @@ function createChart(ctx, label, timeLabels, data1, data2, data3) {
             labels: timeLabels,
             datasets: [
                 {
-                    label: `流入`,
+                    label: `Inflow`,
                     data: data1,
                     borderColor: 'green',
                     fill: false,
                 },
                 {
-                    label: `流出`,
+                    label: `Outflow`,
                     data: data2,
                     borderColor: 'red',
                     fill: false,
                 },
                 {
-                    label: `净流入`,
+                    label: `Net inflow`,
                     data: data3,
                     borderColor: 'blue',
                     fill: false,
@@ -144,13 +144,13 @@ function createChart(ctx, label, timeLabels, data1, data2, data3) {
                 x: {
                     title: {
                         display: true,
-                        text: '时间',
+                        text: 'Time',
                     },
                 },
                 y: {
                     title: {
                         display: true,
-                        text: '金额',
+                        text: 'Amount',
                     },
                 },
             },
@@ -168,13 +168,13 @@ function createDualChart(ctxVolume, ctxPrice, category, timeLabels,
             labels: timeLabels,
             datasets: [
                 {
-                    label: `${category}买单量`,
+                    label: `${category} purchased order quantity`,
                     data: buyVolume,
                     borderColor: 'green',
                     fill: false,
                 },
                 {
-                    label: `${category}卖单量`,
+                    label: `${category} sold order quantity`,
                     data: sellVolume,
                     borderColor: 'red',
                     fill: false,
@@ -187,13 +187,13 @@ function createDualChart(ctxVolume, ctxPrice, category, timeLabels,
                 x: {
                     title: {
                         display: true,
-                        text: '时间',
+                        text: 'Time',
                     },
                 },
                 y: {
                     title: {
                         display: true,
-                        text: '成交量',
+                        text: 'Quantity',
                     },
                 },
             },
@@ -207,13 +207,13 @@ function createDualChart(ctxVolume, ctxPrice, category, timeLabels,
             labels: timeLabels,
             datasets: [
                 {
-                    label: `${category}买单金额`,
+                    label: `${category} purchased order quantity`,
                     data: buyPrice,
                     borderColor: 'rgba(100,255,0,0.8)',
                     fill: false,
                 },
                 {
-                    label: `${category}卖单金额`,
+                    label: `${category} sold order quantity`,
                     data: sellPrice,
                     borderColor: 'rgba(255,100,0,0.8)',
                     fill: false,
@@ -226,13 +226,13 @@ function createDualChart(ctxVolume, ctxPrice, category, timeLabels,
                 x: {
                     title: {
                         display: true,
-                        text: '时间',
+                        text: 'Time',
                     },
                 },
                 y: {
                     title: {
                         display: true,
-                        text: '金额',
+                        text: 'Amount',
                     },
                 },
             },
