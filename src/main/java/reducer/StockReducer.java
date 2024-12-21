@@ -1,5 +1,6 @@
 package reducer;
 
+import driver.StockDriver;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import java.io.IOException;
@@ -10,6 +11,14 @@ public class StockReducer extends Reducer<Text, Text, Text, Text> {
 
     @Override
     public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+        if(StockDriver.a==0){
+            context.write(null, new Text("主力净流入"+","+"主力流入"+","+"主力流出"+","+"超大买单成交量"+","
+                    +"超大买单成交额"+","+"超大卖单成交量"+","+"超大卖单成交额"+","+"大买单成交量"+","+"大买单成交额"+","+
+                    "大卖单成交量"+","+"大卖单成交额"+","+"中买单成交量"+","+"中买单成交额"+","+"中卖单成交量"+","+"中卖单成交额"+","+
+                    "小买单成交量"+","+"小买单成交额"+","+"小卖单成交量"+","+"小卖单成交额"+","+"时间区间"
+            ));
+            StockDriver.a=1;
+        }
         HashMap<String, String> buyMap = new HashMap<>(); // proactively purchased order records
         HashMap<String, String> sellMap = new HashMap<>(); // proactively sold order records
 

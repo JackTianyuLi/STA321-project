@@ -34,38 +34,6 @@ public class Mapper2 extends Mapper<LongWritable, Text, Text, Text> {
                 }
 
     }
-//    private static String createTimeKey(String tradeTime) {
-//        // 解析输入时间
-//        int hour = Integer.parseInt(tradeTime.substring(8, 10));
-//        int minute = Integer.parseInt(tradeTime.substring(10, 12));
-//
-//        // 获取输入时间的字符串表示
-//        String inputTradeTime = String.format("%04d%02d%02d%02d%02d00000",
-//                Integer.parseInt(tradeTime.substring(0, 4)),
-//                Integer.parseInt(tradeTime.substring(4, 6)),
-//                Integer.parseInt(tradeTime.substring(6, 8)),
-//                hour,
-//                minute);
-//
-//        // 遍历时间窗口比较
-//        String previousSlot = null; // 用于存储上一个时间点
-//        for (String slot : timeSlots) {
-//            // 比较输入时间和时间窗口的时间
-//            if (inputTradeTime.compareTo(slot) < 0) {
-//                // 如果找到第一个大于等于输入时间的时间点，返回上一个时间点
-//                return previousSlot+" to "+slot;
-//            }
-//
-//            // 更新上一个时间点
-//            previousSlot = slot;
-//
-//        }
-//        // 如果没有找到合适的时间点，返回最早的时间点或 null
-//        return previousSlot+" to "+"20190102150000000"; // 返回最后一个有效的时间点
-//    }
-//
-
-
 
     private String createTimeKey(String tradeTime) { // convert input time to the start of a time window
         // trade time format: yyyyMMddHHmmSSsss
