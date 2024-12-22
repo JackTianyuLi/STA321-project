@@ -3,6 +3,7 @@ let chart; // save chart instance
 // parse file content
 function parseFileContent(content){
     const lines = content.trim().split('\n');
+    const dataRows = lines.slice(1);
     const timeLabels = [];
     const mainNetInflow = [];
     const mainInflow = [];
@@ -24,45 +25,43 @@ function parseFileContent(content){
     const smallSellVolume = [];
     const smallSellPrice = [];
 
-    lines.forEach(line => {
-        const parts = line.split("\t");
-        const timeWindow = parts[0]; // time window
-        const timePart = timeWindow.slice(-6); // 获取最后 5 个字符 "xx时xx分"
-        const hhmm = timePart.replace("点", "").replace("分", "");
+    dataRows.forEach(line => {
+        console.log(line)
+        const parts = line.split(",");
+        const timeWindow = parts[19]; // time window
+        const hhmm = timeWindow.slice(8,12)
 
-        const data = parts[1]
-        const fields = data.split(",")
         // set data values
         timeLabels.push(hhmm); // time window
 
         // main flow
-        mainNetInflow.push(parseFloat(fields[0]))
-        mainInflow.push(parseFloat(fields[1]));
-        mainOutflow.push(-parseFloat(fields[2]));
+        mainNetInflow.push(parseFloat(parts[0]))
+        mainInflow.push(parseFloat(parts[1]));
+        mainOutflow.push(-parseFloat(parts[2]));
 
         // extra large orders
-        extraLargeBuyVolume.push(parseFloat(fields[3]));
-        extraLargeBuyPrice.push(parseFloat(fields[4]));
-        extraLargeSellVolume.push(-parseFloat(fields[5]));
-        extraLargeSellPrice.push(-parseFloat(fields[6]));
+        extraLargeBuyVolume.push(parseFloat(parts[3]));
+        extraLargeBuyPrice.push(parseFloat(parts[4]));
+        extraLargeSellVolume.push(-parseFloat(parts[5]));
+        extraLargeSellPrice.push(-parseFloat(parts[6]));
 
         // large orders
-        largeBuyVolume.push(parseFloat(fields[7]));
-        largeBuyPrice.push(parseFloat(fields[8]));
-        largeSellVolume.push(-parseFloat(fields[9]));
-        largeSellPrice.push(-parseFloat(fields[10]));
+        largeBuyVolume.push(parseFloat(parts[7]));
+        largeBuyPrice.push(parseFloat(parts[8]));
+        largeSellVolume.push(-parseFloat(parts[9]));
+        largeSellPrice.push(-parseFloat(parts[10]));
 
         // medium orders
-        mediumBuyVolume.push(parseFloat(fields[11]));
-        mediumBuyPrice.push(parseFloat(fields[12]));
-        mediumSellVolume.push(-parseFloat(fields[13]));
-        mediumSellPrice.push(-parseFloat(fields[14]));
+        mediumBuyVolume.push(parseFloat(parts[11]));
+        mediumBuyPrice.push(parseFloat(parts[12]));
+        mediumSellVolume.push(-parseFloat(parts[13]));
+        mediumSellPrice.push(-parseFloat(parts[14]));
 
         // small orders
-        smallBuyVolume.push(parseFloat(fields[15]));
-        smallBuyPrice.push(parseFloat(fields[16]));
-        smallSellVolume.push(-parseFloat(fields[17]));
-        smallSellPrice.push(-parseFloat(fields[18]));
+        smallBuyVolume.push(parseFloat(parts[15]));
+        smallBuyPrice.push(parseFloat(parts[16]));
+        smallSellVolume.push(-parseFloat(parts[17]));
+        smallSellPrice.push(-parseFloat(parts[18]));
     });
 
     return { timeLabels, mainNetInflow, mainInflow, mainOutflow,
@@ -243,7 +242,7 @@ function createDualChart(ctxVolume, ctxPrice, category, timeLabels,
 
 // read local file
 function fetchAndUpdateData() {
-    fetch('part-r-00000.txt') // 从本地 HTTP 服务器加载文件
+    fetch('output.csv') // 从本地 HTTP 服务器加载文件
         .then(response => response.text())
         .then(content => {
             const parsedData = parseFileContent(content); // 解析文件内容
