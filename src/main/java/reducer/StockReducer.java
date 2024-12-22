@@ -18,7 +18,7 @@ public class StockReducer extends Reducer<Text, Text, Text, Text> {
                     "小买单成交量"+","+"小买单成交额"+","+"小卖单成交量"+","+"小卖单成交额"+","+"时间区间"
             ));
             StockDriver.a=1;
-        }
+        }//write header once
         HashMap<String, String> buyMap = new HashMap<>(); // proactively purchased order records
         HashMap<String, String> sellMap = new HashMap<>(); // proactively sold order records
 
@@ -142,24 +142,6 @@ public class StockReducer extends Reducer<Text, Text, Text, Text> {
             }
         }
         total_out = super_out_price + large_out_price;
-
-        // output: time window, main inflow, extra-large purchased order quantity, extra-large purchased order amount,
-        // large purchased order quantity, large purchased order amount, medium purchased order quantity, medium purchased order amount,
-        // small purchased order quantity, small purchased order amount
-        // output: time window, main net inflow, main outflow, extra-large sold order quantity, extra-large sold order amount,
-        // large sold order quantity, large sold order amount, medium sold order quantity, medium sold order amount,
-        // small sold order quantity, small sold order amount
-        // output: time window, main net inflow, main inflow, main outflow, extra-large purchased order quantity,
-        // extra-large purchased order amount, extra-large sold order quantity, extra-large sold order amount,
-        // large purchased order quantity, large purchased order amount, large sold order quantity, large sold order amount,
-        // medium purchased order quantity, medium purchased order amount, medium sold order quantity, medium sold order amount,
-        // small purchased order quantity, small purchased order amount, small sold order quantity, small sold order amount
-
-// 创建一个 DecimalFormat 实例
-
-
-
-// 在输出结果时格式化每个数值
 
         // create a DecimalFormat instance
         // convert to format when output
