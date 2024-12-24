@@ -242,7 +242,7 @@ function createDualChart(ctxVolume, ctxPrice, category, timeLabels,
 
 // read local file
 function fetchAndUpdateData() {
-    fetch('output.csv') // 从本地 HTTP 服务器加载文件
+    fetch('/output/output.csv') // 从本地 HTTP 服务器加载文件
         .then(response => response.text())
         .then(content => {
             const parsedData = parseFileContent(content); // 解析文件内容
@@ -254,7 +254,7 @@ function fetchAndUpdateData() {
 }
 
 // update chart over a period of time
-setInterval(fetchAndUpdateData, 60000); // 每 60 秒更新一次
+setInterval(fetchAndUpdateData, 5000); // 每 5 秒更新一次
 
 // first used when fetching the page
 fetchAndUpdateData();
