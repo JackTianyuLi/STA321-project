@@ -21,8 +21,8 @@ Project details and requirements：https://github.com/JackTianyuLi/STA321-projec
 
 3. Project structure
 
-   ```
-./data # too large for upload on repository, if needed please contact the repository owner   
+```
+./data // too large for upload on repository, if needed please contact the repository owner   
 ./src 
 ├── ./resources
 └── ./java
@@ -40,7 +40,7 @@ Project details and requirements：https://github.com/JackTianyuLi/STA321-projec
         ├──./app.js            // read and import result data
         ├──./index.html        // setting the layout of the webpage
         └──./output.csv
-   ```
+```
 
 3. Implemented functions
 
