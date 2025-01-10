@@ -21,8 +21,6 @@ Project details and requirements：https://github.com/JackTianyuLi/STA321-projec
 
 3. Project structure
 
-   ---
-
    ```
 ./data # too large for upload on repository, if needed please contact the repository owner   
 ./src 
